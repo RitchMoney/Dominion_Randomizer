@@ -1,0 +1,14 @@
+{% import 'supply.html' as supply %} 
+<html>
+  <body>
+    <h1>Dominion Randomizer!</h1>
+    <form method="POST">
+    </form>
+    <input type="submit">Generate</input>
+    <div>
+      {% if kingdom_supply %}
+        {{ supply.render_supply(kingdom) }}
+      {% endif %}
+    </div>
+  </body>
+</html>

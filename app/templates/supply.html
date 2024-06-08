@@ -1,0 +1,7 @@
+{% macro render_supply(kingdom) %}
+<ul>
+  {% for card in kingdom.cards %}
+  <li>{{ card.name }}</li>
+  {% endfor %}
+</ul>
+{% endmacro %}
