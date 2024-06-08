@@ -1,12 +1,12 @@
 # Dominion Randomizer
 
-## Overview 
-
-### Summary
+## Overview
 This is a web application that generates randomized Kingdoms for the deck-building board game Dominion.
-
-### Technical Summary
 This project is built with Flask. 
+
+## Basic Usage
+
+run the manager script from the root diectory: ```python3 manage.py```
 
 ## Application Layout
 
