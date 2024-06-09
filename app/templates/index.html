@@ -1,12 +1,11 @@
-{% import 'supply.html' as supply %} 
+{% import "bootstrap/wtf.html" as wtf %}
+{% import 'supply.html' as supply %}
 <html>
   <body>
     <h1>Dominion Randomizer!</h1>
-    <form method="POST">
-    </form>
-    <input type="submit">Generate</input>
+    {{ wtf.quick_form(form) }}
     <div>
-      {% if kingdom_supply %}
+      {% if kingdom.cards %}
         {{ supply.render_supply(kingdom) }}
       {% endif %}
     </div>

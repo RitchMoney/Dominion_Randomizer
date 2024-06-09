@@ -1,20 +1,13 @@
-class Card:
-  name : str
-  
-  def __init__(self, name):
-    self.name = name
+from dominion.util import get_random_card
+from dominion.card import Card
 
-  @staticmethod
-  def get_arbitrary_card():
-    return Card('Cellar')
-  
 class Kingdom:
   cards : list
   max_size : int = 10
   
   def __init__(self):
-   self.generate()
-  
+    pass
+
   def add_card(self, card : Card):
     self.cards.append(card)
 
@@ -24,6 +17,5 @@ class Kingdom:
   def generate(self):
     cards = []
     while (len(cards) < self.max_size):
-        #TODO expand to replace 'get_arbitrary_card'
-        cards.append(Card.get_arbitrary_card())
+        cards.append(get_random_card())
     self.cards = cards

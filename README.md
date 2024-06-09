@@ -8,6 +8,8 @@ This project is built with Flask.
 
 run the manager script from the root diectory: ```python3 manage.py```
 
+run unit tests: ```python3 -m unittest```
+
 ## Application Layout
 
 ### /
