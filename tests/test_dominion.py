@@ -16,4 +16,4 @@ class DominionTests(unittest.TestCase):
 class UtilTests(unittest.TestCase):
   def test_get_random_card(self):
     card = util.get_random_card()
-    #print(card)
+    print(card)
