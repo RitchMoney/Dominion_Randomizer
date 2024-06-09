@@ -1,5 +1,7 @@
 # Dominion Randomizer
 
+![Uploading image.png…]()
+
 ## Overview
 This is a web application that generates randomized Kingdoms for the deck-building board game Dominion.
 This project is built with Flask. 
