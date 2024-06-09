@@ -9,6 +9,6 @@ class Card:
     return "{} [Card] - {}".format(self.name, self.img)
   
   def set_image(self):
-    img_dir = 'static/img/'
+    img_dir = '/static/img/'
     name = self.name.replace(" ", "_")
     return '{}{}Digital.jpg'.format(img_dir, self.name)

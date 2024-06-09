@@ -1,6 +1,11 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% import 'supply.html' as supply %}
 <html>
+  <head>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <link rel="stylesheet" href="static/style.css"> 
+
+   </head>
   <body>
     <h1>Dominion Randomizer!</h1>
     {{ wtf.quick_form(form) }}
