@@ -1,4 +1,5 @@
 from dominion.util import get_random_card
+import get_stuff
 from dominion.card import Card
 
 class Kingdom:
@@ -15,7 +16,13 @@ class Kingdom:
     return self.cards
   
   def generate(self):
+    sets = get_stuff.get_sets()
+    
     cards = []
     while (len(cards) < self.max_size):
-        cards.append(get_random_card())
+      card = get_stuff.get_a_card()
+
+      # call filtering here
+
+      cards.append(card)
     self.cards = cards

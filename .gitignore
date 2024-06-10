@@ -1,1 +1,12 @@
 */img/
+.vscode/launch.json
+__pycache__/config.cpython-311.pyc
+app/__pycache__/__init__.cpython-311.pyc
+app/main/__pycache__/__init__.cpython-311.pyc
+app/main/__pycache__/errors.cpython-311.pyc
+app/main/__pycache__/views.cpython-311.pyc
+scripts/__pycache__/parse_card_info.cpython-311.pyc
+dominion/__pycache__/__init__.cpython-311.pyc
+dominion/__pycache__/card.cpython-311.pyc
+dominion/__pycache__/dominion.cpython-311.pyc
+dominion/__pycache__/util.cpython-311.pyc
