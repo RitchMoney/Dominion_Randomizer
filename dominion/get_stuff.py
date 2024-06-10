@@ -7,7 +7,7 @@ def get_sets(sets_dict):
     #delete sets from pkl dict that were not selected
     return sets_dict
 
-# Takes dict of sets and returns a card 
+# Takes dict of sets and returns a random card 
 def get_a_card(dct):
     set = random.choice(dct)
     card_dict = random.choice(set)
