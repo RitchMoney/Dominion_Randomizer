@@ -1,8 +1,12 @@
 class Card:
   name : str
+  set : str
+  data : dict
   
-  def __init__(self, name):
-    self.name = name
+  def __init__(self, dictionary):
+    self.name = dictionary["Name"]
+    self.set = dictionary["Set"]
+    self.data = dictionary
     self.img = self.set_image()
 
   def __str__(self):

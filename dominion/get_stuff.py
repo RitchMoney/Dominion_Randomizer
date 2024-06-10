@@ -1,14 +1,15 @@
 import random
+from card import Card
 
-def get_sets(x):
-    sets = []
-    #integrate with Flask Here
-    #append each set dictionary to sets list
-    return sets
+def get_sets(sets_dict): 
+    #pull pickle (dict of sets each a dict of cards each a dict of info)
+    #integrate with Flask user input here
+    #delete sets from pkl dict that were not selected
+    return sets_dict
 
-# Takes list of sets and returns a card
-def get_a_card(lst):
-    set = random.choice(lst)
-    card_name = random.choice(set.keys())
-    return card_name
-
+# Takes dict of sets and returns a card 
+def get_a_card(dct):
+    set = random.choice(dct)
+    card_dict = random.choice(set)
+    card_obj = Card(card_dict)
+    return card_obj

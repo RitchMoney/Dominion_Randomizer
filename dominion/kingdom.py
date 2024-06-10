@@ -4,6 +4,7 @@ from dominion.card import Card
 
 class Kingdom:
   cards : list
+  sets : list
   max_size : int = 10
   
   def __init__(self):
@@ -20,9 +21,10 @@ class Kingdom:
     
     cards = []
     while (len(cards) < self.max_size):
-      card = get_stuff.get_a_card()
+      card = get_stuff.get_a_card() 
 
       # call filtering here
-
+      
       cards.append(card)
+      del sets[card.set][card.name] #remove from dict in memory so it is not picked twice
     self.cards = cards
