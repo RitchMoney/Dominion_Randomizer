@@ -1,9 +1,11 @@
 #run from parent directory with:
 #  python3 -m scripts.parse_card_info
 """ 
+this will be made obsolete by new scraper
 TO DO: 
 parse cards into separate dictionaries by set (be careful with 2nd edition sets)
 get rid of base treasure, victory, curses, loot, etc.
+
 """
 
 import csv

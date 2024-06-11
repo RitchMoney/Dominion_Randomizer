@@ -1,11 +1,11 @@
 class Card:
   name : str
-  set : str
+  expansion : str
   data : dict
   
   def __init__(self, dictionary):
     self.name = dictionary["Name"]
-    self.set = dictionary["Set"]
+    self.expansion = dictionary["Set"]
     self.data = dictionary
     self.img = self.set_image()
 
