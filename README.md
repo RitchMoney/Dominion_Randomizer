@@ -6,6 +6,10 @@
 This is a web application that generates randomized Kingdoms for the deck-building board game Dominion.
 This project is built with Flask. 
 
+## Setup
+
+```pip3 install -r requirements.txt ```
+
 ## Basic Usage
 
 run the manager script from the root diectory: ```python3 manage.py```
