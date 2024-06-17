@@ -7,9 +7,13 @@ from ingest.serialize_data import serialize
 #take soup and id of heading - returns list of all relative links in next sibling 
 # id of the heading lives in the child of h3 tag so we gotta traverse the tree a bit.
 # should work for any section of cards, which will be useful as we start dealign with non kingdom cards
-def get_card_links(soup, heading_id : str):
-
-
+def get_card_links_from_heading(soup, heading_id : str):
+  find_me = "{}{}".format("#", heading_id)
+  heading = soup.select_one(find_me).parent
+  section = heading.next_sibling.next_sibling #https://beautiful-soup-4.readthedocs.io/en/latest/index.html?highlight=find_next_sibling#going-sideways
+  card_links = []
+  for a in section.select('a[href]'):
+    card_links.append(a['href'])
   return card_links
 
 base_url = 'https://wiki.dominionstrategy.com'
@@ -19,12 +23,7 @@ def get_kcard_links(expansion_page : str) -> dict:
   full_url = '{}{}'.format(base_url, expansion_page)
   response = requests.get(full_url)
   soup = BeautifulSoup(response.text, 'html.parser')
-  find_me = '#Kingdom_cards'
-  heading = soup.select_one(find_me).parent
-  section = heading.next_sibling.next_sibling #https://beautiful-soup-4.readthedocs.io/en/latest/index.html?highlight=find_next_sibling#going-sideways
-  card_links = []
-  for a in section.select('a[href]'):
-    card_links.append(a['href'])
+  card_links = get_card_links_from_heading(soup, 'Kingdom_cards')
   return card_links
 
 def get_card_data_from_list(card_links):
