@@ -6,17 +6,25 @@
 This is a web application that generates randomized Kingdoms for the deck-building board game Dominion.
 This project is built with Flask. 
 
+This project also includes an ingest tool for processing Dominion-related data from the DominionStrategyWiki. See the section on the Ingest Tool below for more details
+
 ## Setup
 
 ```pip3 install -r requirements.txt ```
 
-## Basic Usage
+## Starting the DominionRandomizer Server 
 
 run the manager script from the root diectory: ```python3 manage.py```
 
 run unit tests: ```python3 -m unittest```
 
-## Application Layout
+## Ingest Tool
+
+The Dominion Randomizer relies on stored datasets generated from custom backend ingest infrastructure. The ingest tool is the entrypoint for initiating ingest operations on the server.
+
+TODO: elaborate on the tool's purpose as well as basic usage
+
+## Techical Details: Application Layout
 
 ### /
 
