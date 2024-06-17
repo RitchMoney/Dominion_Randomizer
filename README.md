@@ -18,7 +18,18 @@ run the manager script from the root diectory: ```python3 manage.py```
 
 run unit tests: ```python3 -m unittest```
 
-## Ingest Tool
+## Development
+
+### Running Unit Tests
+
+This Application utilizes unitteset. From the base directory, all tests can be run with the following command:
+```python3 -m unittest```
+
+A specific unittest module can be run as follows:
+
+```python3 -m unittest tests.test_dominion_data```
+
+### Ingest Tool
 
 The Dominion Randomizer relies on stored datasets generated from custom backend ingest infrastructure. The ingest tool is the entrypoint for initiating ingest operations on the server.
 

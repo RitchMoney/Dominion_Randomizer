@@ -12,3 +12,8 @@ class Card:
     img_dir = '/static/card_img/'
     name = self.name.replace(" ", "_")
     return '{}{}Digital.jpg'.format(img_dir, name)
+  
+  @staticmethod
+  def from_card_data (card_data : dict):
+    print(card_data)
+    return Card(name=card_data['name'])
