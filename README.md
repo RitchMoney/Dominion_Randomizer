@@ -1,6 +1,6 @@
 # Dominion Randomizer
 
-![image](https://github.com/RitchMoney/Dominion_Randomizer/assets/16928672/c2cfd1fa-6baf-4f7c-ac54-0f8485cbe239)
+![image](https://github.com/user-attachments/assets/112b7b68-2c96-489b-905c-92c88fe48365)
 
 ## Overview
 This is a web application that generates randomized Kingdoms for the deck-building board game Dominion.
