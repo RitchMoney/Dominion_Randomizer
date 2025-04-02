@@ -26,5 +26,6 @@ class Kingdom:
         candidate_cards.append(Card.from_card_data(card_data))
     while (len(cards) < self.max_size):
         random_card = random.choice(candidate_cards)
+        random_card = candidate_cards.pop(random.randrange(len(candidate_cards)))
         cards.append(random_card)
     self.cards = cards
