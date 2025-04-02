@@ -1,13 +1,11 @@
 import requests
-from bs4 import BeautifulSoup as bs
+from bs4 import Tag, NavigableString, BeautifulSoup
 import csv
 
-all_cards_webpage = 'https://wiki.dominionstrategy.com/index.php/List_of_cards'
-
-# takes all cards webpage and returns a nested list of BeautifulSoup elements
+# takes all cards webpage and returns a nested list of strings for each cell in card table.
 def get_table(webpage: str) ->  list:
     response = requests.get(webpage)
-    soup = bs(response.text, 'html.parser')
+    soup = BeautifulSoup(response.text, 'html.parser')
     
     data = []
     table = soup.find('table') #make sure this pulls proper table
@@ -16,8 +14,16 @@ def get_table(webpage: str) ->  list:
     for row in rows:
         columns = row.find_all('td')
         row_data = []
-        for td in columns:
-            row_data.append(td)
+        for i, td in enumerate(columns):
+            for child in td.decendants: # iterate through all tags and strings below
+                if isinstance(child, NavigableString): #looking for plaintext to grab
+                    row_data[i].append(child.get_text(),' ')
+                elif child.name == 'hr': #looking for deviders to grab
+                    row_data[i].append('// ')
+                elif child.name == 'span' or child.name == 'a': #looking for images to replace
+                    text = convert_images_to_text(child)
+                    if text != None:
+                        row_data[i].append(text,' ')
         data.append(row_data)
 
     return data
@@ -25,29 +31,29 @@ def get_table(webpage: str) ->  list:
 # remove links and keep just text 
 
 
-# convert coin images to plaintext
-def convert_coins_to_text(bs_element) -> str:
+# 
+def convert_images_to_text(bs_element) -> str:
     coin = bs_element.find('span', class_="coin-icon")
-    if coin != None:
+    vp = bs_element.find('a', title="Victory point")
+    potion = bs_element.find('a', title="Potion")
+    debt = bs_element.find('a', title="debt")
+    #
+    if coins != None:
         image = coin.find('img')
+        return image['alt']
+    elif vp != None:
+        return 'VP'
+    elif potion != None:
+        return 'POTION'
+    elif debt != None:
+        image = debt.find('img')
         return image['alt']
     else:
         return None
 
-def convert_vp_to_text(bs_element) -> str:
-    a = bs_element.find('a', title="Victory point")
-    if a != None:
-        return 'VP'
-    else:
-        return None
 
+if __name__ == main:
 
-# list = get_table(all_cards_webpage)
+    cardtable = get_table(all_cards_webpage)
 
-
-
-
-# test converting coin image
-test_data = '<span style="white-space: nowrap;">3 <span typeof="mw:File"><a href="/index.php/Victory_point" title="Victory point"><img alt="VP" src="/images/thumb/9/92/VP.png/14px-VP.png" decoding="async" loading="lazy" width="14" height="16" class="mw-file-element" srcset="/images/thumb/9/92/VP.png/21px-VP.png 1.5x, /images/thumb/9/92/VP.png/28px-VP.png 2x" data-file-width="461" data-file-height="512"></a></span></span>'
-soup = bs(test_data, 'html.parser')
-print(convert_vp_to_text(soup))
+    all_cards_webpage = 'https://wiki.dominionstrategy.com/index.php/List_of_cards'
