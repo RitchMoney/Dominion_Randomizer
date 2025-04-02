@@ -11,12 +11,20 @@ This project also includes an ingest tool for processing Dominion-related data f
 ## Setup
 
 ```pip3 install -r requirements.txt ```
+export a SECRET_KEY env variable: ```export SECRET_KEY="{insert key}"```
 
-## Starting the DominionRandomizer Server 
+## Usage
+
+### Starting the DominionRandomizer Server 
 
 run the manager script from the root diectory: ```python3 manage.py```
 
 run unit tests: ```python3 -m unittest```
+
+### Running tests
+
+run all unit tests: ```python3 -m unittest tests.test_dominion_data```
+run a specific unit test: ``` python3 -m unittest tests.test_dominion.UtilTests.test_get_expansion_data```
 
 ## Ingest Tool
 

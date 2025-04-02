@@ -8,5 +8,8 @@ def index(requireActions : bool = None):
   kingdom = Kingdom()
   form = GenerateKingdomForm()
   if form.validate_on_submit():
-    kingdom.generate()
+    kingdom = Kingdom(
+      included_expansions=['Intrigue'] #add to form later
+    ) 
+    kingdom.generate_kingdom()
   return render_template('index.html', kingdom=kingdom, form=form)
