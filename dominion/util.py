@@ -2,10 +2,18 @@ from dominion.card import Card
 import pickle 
 import random
 
-def get_random_card() -> Card:
-  card_list = get_from_pickle('cards')
-  card_name = random.choice(card_list)
+def get_random_card(candidate_cards : list[str] = None) -> Card:
+  if candidate_cards is None:
+    candidate_cards = get_from_pickle('card_names')
+  try:
+    card_name = random.choice(candidate_cards)
+  except:
+    return
   return Card(card_name)
+
+def get_expansion_card_names(expansion_name : str) -> dict:
+  expansion_data = get_from_pickle('sets/{}'.format(expansion_name))
+  return list(expansion_data.keys())
 
 def get_from_pickle(pickle_name : str, path : str = 'dominion_data/pickle/{}.pkl'):
   with open (path.format(pickle_name), 'rb') as f:
