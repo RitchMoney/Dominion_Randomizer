@@ -15,23 +15,19 @@ def get_table(webpage: str) ->  list:
         columns = row.find_all('td')
         row_data = []
         for i, td in enumerate(columns):
-            for child in td.decendants: # iterate through all tags and strings below
-                if isinstance(child, NavigableString): #looking for plaintext to grab
-                    row_data[i].append(child.get_text(),' ')
-                elif child.name == 'hr': #looking for deviders to grab
-                    row_data[i].append('// ')
-                elif child.name == 'span' or child.name == 'a': #looking for images to replace
-                    text = convert_images_to_text(child)
-                    if text != None:
-                        row_data[i].append(text,' ')
+            for child in td.decendants: # iterate through all tags and strings below        -\
+                if isinstance(child, NavigableString): #looking for plaintext to grab         \
+                    row_data[i].append(child.get_text(),' ') #                                 \
+                elif child.name == 'hr': #looking for deviders to grab                          \ 
+                    row_data[i].append('// ') #                                                  | Not tested
+                elif child.name == 'span' or child.name == 'a': #looking for images to replace  /
+                    text = convert_images_to_text(child) #                                     / 
+                    if text != None: #                                                        /
+                        row_data[i].append(text,' ') #                                      _/
         data.append(row_data)
 
     return data
 
-# remove links and keep just text 
-
-
-# 
 def convert_images_to_text(bs_element) -> str:
     coin = bs_element.find('span', class_="coin-icon")
     vp = bs_element.find('a', title="Victory point")
@@ -51,9 +47,33 @@ def convert_images_to_text(bs_element) -> str:
     else:
         return None
 
+#this function is untested 
+def table_to_dict(table_of_cards: list[list[str]]) -> dict:
+    expansions = {}
+    for card in table_of_cards:
+        expansions[card[1]][card[0]] = {
+          "name": card[0],
+          "expansion": card[1],
+          "types": [],
+          "cost": card[3], 
+          "text": card[4],
+          "actions": card[5], # includes villagers
+          "cards": card[6], # draw or discard
+          "buys": card[7],
+          "coins": card[8], # includes coffers
+          "trash": card[9],
+          "exile": card[10],
+          "junk": card[11],
+          "gain": card[12],
+          "vp": card[13]
+        }
+    return expansions    
+
 
 if __name__ == main:
-
     cardtable = get_table(all_cards_webpage)
+
+    # contains dict of expansions, each a dict of all cards in that expansion, each a dict of card info.
+    master_dictionary = table_to_dict(cardtable) 
 
     all_cards_webpage = 'https://wiki.dominionstrategy.com/index.php/List_of_cards'
