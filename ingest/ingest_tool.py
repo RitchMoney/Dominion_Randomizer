@@ -1,61 +1,109 @@
-#This is the command-line application for ingest of dominion data. run as "python3 -m ingest.ingest_tool" from root of project
+import requests
+from bs4 import Tag, NavigableString, BeautifulSoup
+from dominion import util
 
-import argparse
-from ingest.get_expansions import get_expansions
-from ingest.retrieve_card_data import get_card_data, get_kcard_links
-from ingest.serialize_data import serialize, unserialize
+# takes all cards webpage and returns a nested list of strings for each cell in card table.
+def get_table(webpage: str) ->  list:
+    response = requests.get(webpage)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    table = soup.find('table') #make sure this pulls proper table
+    table_body = table.find('tbody')
+    rows = table_body.find_all('tr')
+    for row in rows:
+        columns = row.find_all('td')
+        for i, td in enumerate(columns):
+            cell = ''
+            if not td.descendants:
+                continue
+            for child in td.descendants: # iterate through all tags and strings below        -\
+                if isinstance(child, NavigableString): #looking for plaintext to grab         \
+                    cell += child.get_text() + ' ' #                                 \
+import requests
+from bs4 import Tag, NavigableString, BeautifulSoup
+import csv
+
+# takes all cards webpage and returns a nested list of strings for each cell in card table.
+def get_table(webpage: str) ->  list:
+    response = requests.get(webpage)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    data = []
+    table = soup.find('table')
+    table_body = table.find('tbody')
+    rows = table_body.find_all('tr')
+    for row in rows:
+        columns = row.find_all('td')
+        row_data = []
+        for td in columns:
+            cell = ''
+            if not td.descendants:
+                continue
+            for child in td.descendants: # iterate through all tags and strings below 
+                if isinstance(child, NavigableString): #looking for plaintext to grab
+                    cell += child.get_text() + ' '
+                elif child.name == 'hr': #looking for deviders to grab
+                    cell += '// '
+                elif child.name == 'span' or child.name == 'a':
+                    text = convert_images_to_text(child)
+                    if text != None:
+                        cell += text + ' '
+            row_data.append(cell.strip())
+        if row_data:
+            data.append(row_data)
+
+    return data
+
+def convert_images_to_text(bs_element : Tag) -> str:
+    if bs_element.has_attr('class') and bs_element['class'][0] == 'coin-icon':
+        image = bs_element.find('img')
+        if image['alt'] != 'P': #potions are coin icons for some reason :(
+            return image['alt']
+    
+    if bs_element.has_attr('title') and bs_element['title'] == 'Victory point':
+        return 'VP'
+    
+    if bs_element.has_attr('title') and bs_element['title'] == 'Potion':
+        return 'POTION'
+    
+    if bs_element.has_attr('title') and bs_element['title'] == 'Debt':
+        image = bs_element.find('img')
+        return image['alt']
+
+    return None
+
+def table_to_dict(table_of_cards: list[list[str]]) -> dict:
+    expansions = {}
+    for card in table_of_cards:
+        current_expansion = card[1]
+        card_name = card[0]
+        if current_expansion not in expansions:
+            expansions[current_expansion] = {}
+        expansions[current_expansion][card_name] = {
+          "name": card[0],
+          "expansion": card[1],
+          "types": card[2], # fix so is a list instead of string
+          "cost": card[3], 
+          "text": card[4],
+          "actions": card[5], # includes villagers
+          "cards": card[6], # draw or discard
+          "buys": card[7],
+          "coins": card[8], # includes coffers
+          "trash": card[9],
+          "exile": card[10],
+          "junk": card[11],
+          "gain": card[12],
+          "vp": card[13]
+        }
+    return expansions    
+
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser(description='Welcome to the DominionData ingest tool!')
-  parser.add_argument('-e','--get-expansion-data', action='store_true', help='Download Expansions data')
-  parser.add_argument('-E','--show-expansions', action='store_true', help='Show the stored list of sets')
-  parser.add_argument('-C','--show-cards', help='Show the cards for a specified expansion')
-  parser.add_argument('-l','--long', action='store_true', help='long output for show commands')
-  parser.add_argument('-c','--get-card-data', nargs="*", help='Download card data for specified expansions, or all if no argument is provided')
-  parser.add_argument('-d', action='store_true')
-  args = parser.parse_args()
-  if args.d:
-    print(args)
-    exit()
+    all_cards_webpage = 'https://wiki.dominionstrategy.com/index.php/List_of_cards'
+    
+    cardtable = get_table(all_cards_webpage)
 
-  if args.get_expansion_data: 
-    print('get_expansion_data specified. Downloading all Dominion sets.')
-    get_expansions(save_output=True)
-    print('success')
+    # contains dict of expansions, each a dict of all cards in that expansion, each a dict of card info.
+    master_dictionary = table_to_dict(cardtable) 
 
-  if args.get_card_data is not None:
-    requested_expansions = args.get_card_data
-    expansion_links = unserialize('expansions')
-    if requested_expansions == []: requested_expansions = list(expansion_links.keys())  #defualts to all
-    print('get_card_data specified. Downloading kingdom cards for sets: {}'.format(requested_expansions))
-    for expansion_name in requested_expansions:
-      link = expansion_links[expansion_name]
-      card_links = get_kcard_links(link)
-      print('downloading data for {}: '.format(expansion_name), end='')
-      expansion_data = {}
-      for card_link in card_links:
-        print('.', end='')
-        card_data = get_card_data(card_link)
-        expansion_data[card_data['name']] = card_data
-      print('')
-      serialize(expansion_data, 'sets/{}'.format(expansion_name.replace(' ', '_')))
-
-
-
-  if args.show_expansions:
-    print("Showing stored set list")
-    expansions = unserialize('expansions')
-    for name, link in expansions.items():
-      print('{} ({})'.format(name, link))
-
-  if args.show_cards:
-    expansions = args.show_cards
-    print("Showing cards for expansion: {}".format(expansions))
-    expansion_cards = unserialize('sets/{}'.format(expansions))
-    print('there are {} kingdom cards in this set:'.format(len(expansion_cards)))
-    for card in expansion_cards.values():
-      if args.long:
-        print(list(card.values()))
-      else: print(card['name'], end=", ")
-      print()
-  #print('expansions:\n\n', expansions)
+    util.pickle_obj(master_dictionary, 'dominion_data/pickle/all_cards.pkl')
